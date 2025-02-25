@@ -2,6 +2,7 @@
 
 const express = require('express');
 const errorHandler = require('./middleware/errorHandler');
+const connectDb =require('./config/dbConnection')
 require('dotenv').config(); // ✅ Loads environment variables
 
 // → Creates your Express web server
@@ -15,6 +16,8 @@ app.use(express.json()); // ✅ Helps parse JSON request bodies
 // Routes
 app.use('/api/contacts', require('./routes/contactRoutes'));
 app.use(errorHandler)
+
+connectDb()
 
 app.listen(port, () => {
   console.log(`Express server listening on port ${port}`);
