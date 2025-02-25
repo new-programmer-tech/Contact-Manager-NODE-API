@@ -96,9 +96,25 @@ const updateContact = asyncHandler(async (req, res) => {
 //@desc delete contact
 //@route DELETE/:id api/contact/id
 //@access public
-const deleteContact = asyncHandler(async (req , res) => {
-  res.status(200).json({ message: 'get API ' });
-})
+const deleteContact = asyncHandler(async (req, res) => {
+  try {
+    const contactById = await Contact.findById(req.params.id);
+
+    if (!contactById) {
+      return res.status(404).json({ error: 'Contact not found' });
+    }
+
+    const deleteContact = await Contact.deleteOne({ _id: req.params.id }); // Deletes the contact
+
+    res.status(200).json({
+      body: deleteContact,
+      message: 'Contact deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting contact:', error);
+    return res.status(400).json({ error: 'Invalid contact ID' });
+  }
+});
 
 
 // ============================================================
