@@ -6,7 +6,7 @@ const Contact = require('../models/contactModel')
 //@route GET api/contact
 //@access public
 const getContacts = asyncHandler(async (req, res) => {
-  const allContacts = await Contact.find()
+  const allContacts = await Contact.find({user_id : req.user.id})
   console.log("allContacts", allContacts);
   res.status(200).json(allContacts);
 })
@@ -29,7 +29,13 @@ const createContact = asyncHandler(async (req, res) => {
   }
 
   // Create contact
-  const contact = await Contact.create({ name, email, phone });
+  const contact = await Contact.create(
+    {
+      name,
+      email,
+      phone,
+      user_id: req.user.id
+    });
 
   console.log("Created contact:", contact);
 
@@ -79,6 +85,11 @@ const updateContact = asyncHandler(async (req, res) => {
       return res.status(404).json({ error: 'Contact not found' });
     }
 
+  if (contactById.user_id !== req.user.id) {
+    res.status(403)
+    throw new Error('user is not authorized')
+  }
+
     const update = await Contact.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -103,6 +114,11 @@ const deleteContact = asyncHandler(async (req, res) => {
     if (!contactById) {
       return res.status(404).json({ error: 'Contact not found' });
     }
+
+  if (contactById.user_id !== req.user.id) {
+    res.status(403)
+    throw new Error('user is not authorized')
+  }
 
     const deleteContact = await Contact.deleteOne({ _id: req.params.id }); // Deletes the contact
 
