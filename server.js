@@ -15,6 +15,7 @@ app.use(express.json()); // ✅ Helps parse JSON request bodies
 
 // Routes
 app.use('/api/contacts', require('./routes/contactRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
 app.use(errorHandler)
 
 connectDb()
