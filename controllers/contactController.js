@@ -54,10 +54,9 @@ const createContact = asyncHandler(async (req, res) => {
 const getContact = asyncHandler(async (req, res) => {
   try {
     const contactById = await Contact.findById(req.params.id);
-    console.log("contactById:::::::", contactById)
+    // console.log("contactById:::::::", contactById)
 
     if (!contactById) {
-      console.log('if')
       return res.status(404).json({ error: 'Contact not found' }); // ✅ Return response properly
     }
 
